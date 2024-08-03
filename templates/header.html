@@ -1,0 +1,85 @@
+<div class="container-fluid">
+  <header class="mb-1">
+    <div
+      class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start"
+    >
+      <a
+        href="/polls"
+        class="d-flex align-items-center mb-2 mb-lg-0 link-body-emphasis text-decoration-none"
+      >
+        <svg
+          width="32"
+          height="32"
+          fill="currentColor"
+          class="bi bi-bootstrap"
+          viewBox="0 0 16 16"
+        >
+          <path
+            d="M5.062 12h3.475c1.804 0 2.888-.908 2.888-2.396 0-1.102-.761-1.916-1.904-2.034v-.1c.832-.14 1.482-.93 1.482-1.816 0-1.3-.955-2.11-2.542-2.11H5.062zm1.313-4.875V4.658h1.78c.973 0 1.542.457 1.542 1.237 0 .802-.604 1.23-1.764 1.23zm0 3.762V8.162h1.822c1.236 0 1.887.463 1.887 1.348 0 .896-.627 1.377-1.811 1.377z"
+          />
+          <path
+            d="M0 4a4 4 0 0 1 4-4h8a4 4 0 0 1 4 4v8a4 4 0 0 1-4 4H4a4 4 0 0 1-4-4zm4-3a3 3 0 0 0-3 3v8a3 3 0 0 0 3 3h8a3 3 0 0 0 3-3V4a3 3 0 0 0-3-3z"
+          />
+        </svg>
+      </a>
+
+      <ul
+        class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0"
+      >
+        <li>
+          <a href="/polls" class="nav-link px-2 link-secondary"
+            >Home</a
+          >
+        </li>
+        <li>
+          <a href="{% url 'apps.polls:polls-create-question' %}" class="nav-link px-2 link-body-emphasis">Create</a>
+        </li>
+        <li>
+          <a href="#" class="nav-link px-2 link-body-emphasis">View</a>
+        </li>
+        <li>
+          <a href="#" class="nav-link px-2 link-body-emphasis">Settings</a>
+        </li>
+      </ul>
+      <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="search">
+        <input
+          type="search"
+          class="form-control"
+          placeholder="Search..."
+          aria-label="Search"
+        />
+      </form>
+
+      Hi,&nbsp;<a href="{% url 'apps.accounts:profile' request.user.id %}"
+        >{{ request.user.username }}</a
+      >&nbsp;
+      <div class="dropdown text-end">
+        <a
+          href="#"
+          class="d-block link-body-emphasis text-decoration-none"
+          data-bs-toggle="dropdown"
+          aria-expanded="false"
+        >
+          <img
+            src="{{request.user.avatar.url}}"
+            alt="mdo"
+            width="32"
+            height="32"
+            class="rounded-circle"
+          />
+        </a>
+        <ul class="dropdown-menu text-small">
+          <li><a class="dropdown-item" href="#">New project</a></li>
+          <li><a class="dropdown-item" href="#">Settings</a></li>
+          <li><a class="dropdown-item" href="#">Profile</a></li>
+          <li><hr class="dropdown-divider" /></li>
+          <li>
+            <a class="dropdown-item" href="{% url 'apps.accounts:logout' %}"
+              >Log out</a
+            >
+          </li>
+        </ul>
+      </div>
+    </div>
+  </header>
+</div>

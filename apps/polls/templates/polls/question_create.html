@@ -1,0 +1,39 @@
+{% extends 'base.html' %} {% block title %} Create poll {% endblock title %} {%
+load crispy_forms_tags %} {% block base %}
+<h1>Create question to poll</h1>
+<form method="post">
+  {% csrf_token %}
+  <div id="div_id_question_text" class="mb-3">
+    <label for="id_question_text" class="form-label requiredField">
+      Question text<span class="asteriskField">*</span>
+    </label>
+    <input
+      type="text"
+      name="question_text"
+      value="{{form.question_text.value|default_if_none:''}}"
+      maxlength="200"
+      class="textinput form-control"
+      required=""
+      id="id_question_text"
+    />
+  </div>
+
+  <div id="div_id_pub_date" class="mb-3">
+    <label for="id_pub_date" class="form-label requiredField">
+      Date published<span class="asteriskField">*</span>
+    </label>
+    <input
+      type="datetime-local"
+      name="pub_date"
+      value="{{form.pub_date.value|default_if_none:''}}"
+      class="datetimeinput form-control"
+      required=""
+      id="id_pub_date"
+    />
+    <p id="error_1_id_pub_date" class="invalid-feedback">
+      <strong>Enter a valid date/time.</strong>
+    </p>
+  </div>
+  <input type="submit" value="Save" />
+</form>
+{% endblock base %}

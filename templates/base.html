@@ -1,0 +1,20 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="{% static 'icons/favicon.ico' %}" />
+    <!-- Bootstrap css -->
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet" />
+    <!-- Custom styles for this template -->
+    <link href="{% static 'css/custom.css' %}" rel="stylesheet" />
+    <title>mysite - {% block title %}{% endblock %}</title>
+  </head>
+  <body class="p-1">
+    {% if request.user.is_authenticated %} {% include 'header.html' %} {% endif %}
+    <div class="container">{% block base %}{% endblock base %}</div>
+    <!-- bootstrap scripts -->
+    <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+  </body>
+</html>

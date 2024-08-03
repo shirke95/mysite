@@ -1,0 +1,38 @@
+{% extends 'base.html' %} {% block title %} Poll {% endblock title %} 
+{% block base %}
+<div class="container" style="max-width: 960px">
+  <div class="col-md-7 col-lg-8">
+    <h4 class="mb-3">{{ question.question_text }}</h4>
+    <form
+      class="needs-validation"
+      novalidate=""
+      action="{% url 'apps.polls:vote' question.id %}"
+      method="post"
+    >
+      {% csrf_token %}
+      <div class="my-3">
+        {% if error_message %}
+        <p><strong>{{ error_message }}</strong></p>
+        {% endif %} {% for choice in question.choice_set.all %}
+        <div class="form-check">
+          <input
+            id="choice{{ forloop.counter }}"
+            name="choice"
+            type="radio"
+            class="form-check-input"
+            checked=""
+            required=""
+            value="{{ choice.id }}"
+          />
+          <label class="form-check-label" for="choice{{ forloop.counter }}"
+            >{{ choice.choice_text }}</label
+          >
+        </div>
+        {% endfor %}
+      </div>
+      <input type="submit" class="btn btn-success" value="Vote" />
+    </form>
+    <a href="{% url 'apps.polls:polls-create-choice' question.id %}">add poll</a>
+  </div>
+</div>
+{% endblock base %}

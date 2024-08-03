@@ -1,0 +1,25 @@
+{% extends 'base.html' %} {% block title %} Login {% endblock title %} 
+{% load crispy_forms_tags %} {% load static %} {% block base %}
+<!-- <h1>Login</h1>
+<form method="post">
+  {% csrf_token %} {{ form.as_p }}
+  <input type="submit" value="Submit" />
+</form> -->
+<main class="form-signin w-100 m-auto">
+  <img
+    class="mb-4"
+    src="{% static 'icons/bootstrap-logo.svg' %}"
+    alt=""
+    width="72"
+    height="57"
+  />
+  <h1 class="h3 mb-3 fw-normal">Please Login</h1>
+  <form method="post">
+    {% csrf_token %} {{ form | crispy }}
+    <button class="btn btn-primary w-100 py-2" type="submit">Sign in</button>
+  </form>
+  <a href="#">forgot password?</a>
+  <div>or</div>
+  <a href="{% url 'apps.accounts:register' %}">register</a>
+</main>
+{% endblock base %}

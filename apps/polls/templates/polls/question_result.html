@@ -1,0 +1,16 @@
+{% extends 'base.html' %} {% block title %} Result {% endblock title %} 
+{% block base %}
+<div class="container" style="max-width: 960px">
+  <div class="col-md-7 col-lg-8">
+    <h4 class="mb-3">{{ question.question_text }}</h4>
+    <ul>
+      {% for choice in question.choice_set.all %}
+      <li>
+        {{ choice.choice_text }} -- {{ choice.votes }} vote {{choice.votes|pluralize}}
+      </li>
+      {% endfor %}
+    </ul>
+    <a href="{% url 'apps.polls:polls-detail' question.id %}">Vote Again?</a>
+  </div>
+</div>
+{% endblock base %}

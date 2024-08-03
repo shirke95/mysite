@@ -1,0 +1,6 @@
+{% extends 'base.html' %} 
+{% block title %} Home {% endblock title %} 
+{% block base %}
+<h1>hello, {{request.user.username}}</h1>
+<!-- <a href="{% url 'apps.accounts:profile' request.user.id %}"><button type="button" class="btn btn-primary">profile</button></a> -->
+{% endblock base %}
