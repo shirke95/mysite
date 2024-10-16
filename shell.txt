@@ -1,0 +1,223 @@
+>>>python manage.py shell
+Python 3.12.0 (tags/v3.12.0:0fb18b0, Oct  2 2023, 13:03:39) [MSC v.1935 64 bit (AMD64)]
+Type 'copyright', 'credits' or 'license' for more information
+IPython 8.28.0 -- An enhanced Interactive Python. Type '?' for help.
+
+In [1]: from polls.models import Choice, Question  # Import the model classes we just wrote.
+
+In [2]: # No questions are in the system yet.
+
+In [3]: Question.objects.all()
+Out[3]: <QuerySet []>
+
+In [4]: # Create a new Question.
+   ...: # Support for time zones is enabled in the default settings file, so
+   ...: # Django expects a datetime with tzinfo for pub_date. Use timezone.now()
+   ...: # instead of datetime.datetime.now() and it will do the right thing.
+
+In [5]: from django.utils import timezone
+
+In [6]: q = Question(question_text="What's new?", pub_date=timezone.now())
+
+In [7]: # Save the object into the database. You have to call save() explicitly.
+
+In [8]: q.save()
+
+In [9]: # Now it has an ID.
+
+In [10]: q.id
+Out[10]: 1
+
+In [11]: # Access model field values via Python attributes.
+
+In [12]: q.question_text
+Out[12]: "What's new?"
+
+In [13]: q.pub_date
+Out[13]: datetime.datetime(2024, 10, 9, 15, 54, 45, 644367, tzinfo=datetime.timezone.utc)
+
+In [14]: # Change values by changing the attributes, then calling save().
+
+In [15]: q.question_text = "What's up?"
+
+In [16]: q.save()
+
+In [17]: # objects.all() displays all the questions in the database.
+
+In [18]: Question.objects.all()
+Out[18]: <QuerySet [<Question: Question object (1)>]>
+=====================================================
+python manage.py shell
+Python 3.12.0 (tags/v3.12.0:0fb18b0, Oct  2 2023, 13:03:39) [MSC v.1935 64 bit (AMD64)]
+Type 'copyright', 'credits' or 'license' for more information
+IPython 8.28.0 -- An enhanced Interactive Python. Type '?' for help.
+
+In [1]: from polls.models import Choice, Question
+
+In [2]: # Make sure our __str__() addition worked.
+
+In [3]: Question.objects.all()
+Out[3]: <QuerySet [<Question: What's up?>]>
+
+In [4]: # Django provides a rich database lookup API that's entirely driven by
+   ...: # keyword arguments.
+
+In [5]: Question.objects.filter(id=1)
+Out[5]: <QuerySet [<Question: What's up?>]>
+
+In [6]: Question.objects.filter(question_text__startswith="What")
+Out[6]: <QuerySet [<Question: What's up?>]>
+
+In [7]: # Get the question that was published this year.
+
+In [8]: from django.utils import timezone
+
+In [9]: current_year = timezone.now().year
+
+In [10]: Question.objects.get(pub_date__year=current_year)
+Out[10]: <Question: What's up?>
+
+In [11]: # Request an ID that doesn't exist, this will raise an exception.
+
+In [12]: Question.objects.get(id=2)
+---------------------------------------------------------------------------
+DoesNotExist                              Traceback (most recent call last)
+
+.....
+
+DoesNotExist: Question matching query does not exist.
+
+In [13]: # Lookup by a primary key is the most common case, so Django provides a
+    ...: # shortcut for primary-key exact lookups.
+    ...: # The following is identical to Question.objects.get(id=1).
+
+In [14]: Question.objects.get(pk=1)
+Out[14]: <Question: What's up?>
+
+In [15]: # Make sure our custom method worked.
+
+In [16]: q = Question.objects.get(pk=1)
+
+In [17]: q.was_published_recently()
+Out[17]: True
+
+In [18]: # Give the Question a couple of Choices. The create call constructs a new
+    ...: # Choice object, does the INSERT statement, adds the choice to the set
+    ...: # of available choices and returns the new Choice object. Django creates
+    ...: # a set to hold the "other side" of a ForeignKey relation
+    ...: # (e.g. a question's choice) which can be accessed via the API.
+
+In [19]: q = Question.objects.get(pk=1)
+
+In [20]: # Display any choices from the related object set -- none so far.
+
+In [21]: q.choice_set.all()
+Out[21]: <QuerySet []>
+
+In [22]: # Create three choices.
+
+In [23]: q.choice_set.create(choice_text="Not much", votes=0)
+Out[23]: <Choice: Not much>
+
+In [24]: q.choice_set.create(choice_text="The sky", votes=0)
+Out[24]: <Choice: The sky>
+
+In [25]: c = q.choice_set.create(choice_text="Just hacking again", votes=0)
+
+In [26]: # Choice objects have API access to their related Question objects.
+
+In [27]: c.question
+Out[27]: <Question: What's up?>
+
+In [28]: # And vice versa: Question objects get access to Choice objects.
+
+In [29]: q.choice_set.all()
+Out[29]: <QuerySet [<Choice: Not much>, <Choice: The sky>, <Choice: Just hacking again>]>
+
+In [30]: q.choice_set.count()
+Out[30]: 3
+
+In [31]: # The API automatically follows relationships as far as you need.
+    ...: # Use double underscores to separate relationships.
+    ...: # This works as many levels deep as you want; there's no limit.
+    ...: # Find all Choices for any question whose pub_date is in this year
+    ...: # (reusing the 'current_year' variable we created above).
+
+In [32]: Choice.objects.filter(question__pub_date__year=current_year)
+Out[32]: <QuerySet [<Choice: Not much>, <Choice: The sky>, <Choice: Just hacking again>]>
+
+In [33]: # Let's delete one of the choices. Use delete() for that.
+
+In [34]: c = q.choice_set.filter(choice_text__startswith="Just hacking")
+
+In [35]: c.delete()
+Out[35]: (1, {'polls.Choice': 1})
+
+==============================================
+python manage.py shell
+Python 3.12.0 (tags/v3.12.0:0fb18b0, Oct  2 2023, 13:03:39) [MSC v.1935 64 bit (AMD64)]
+Type 'copyright', 'credits' or 'license' for more information
+IPython 8.28.0 -- An enhanced Interactive Python. Type '?' for help.
+
+In [1]: import datetime
+
+In [2]: from django.utils import timezone
+
+In [3]: from polls.models import Question
+
+In [4]: # create a Question instance with pub_date 30 days in the future
+
+In [5]: future_question = Question(pub_date=timezone.now() + datetime.timedelta(days=30))
+
+In [6]: # was it published recently?
+
+In [7]: future_question.was_published_recently()
+Out[7]: True
+
+========================================================
+python manage.py shell
+Python 3.12.0 (tags/v3.12.0:0fb18b0, Oct  2 2023, 13:03:39) [MSC v.1935 64 bit (AMD64)]
+Type 'copyright', 'credits' or 'license' for more information
+IPython 8.28.0 -- An enhanced Interactive Python. Type '?' for help.
+
+In [1]: from django.test.utils import setup_test_environment
+
+In [2]: setup_test_environment()
+
+In [3]: from django.test import Client
+
+In [4]: # create an instance of the client for our use
+
+In [5]: client = Client()
+
+In [6]: # get a response from '/'
+
+In [7]: response = client.get("/")
+Not Found: /
+
+In [8]: # we should expect a 404 from that address; if you instead see an
+
+In [9]: # "Invalid HTTP_HOST header" error and a 400 response, you probably
+
+In [10]: # omitted the setup_test_environment() call described earlier.
+
+In [11]: response.status_code
+Out[11]: 404
+
+In [12]: # on the other hand we should expect to find something at '/polls/'
+
+In [13]: # we'll use 'reverse()' rather than a hardcoded URL
+
+In [14]: from django.urls import reverse
+
+In [15]: response = client.get(reverse("polls:index"))
+
+In [16]: response.status_code
+Out[16]: 200
+
+In [17]: response.content
+Out[17]: b'\n<ul>\n  \n  <li>\n    <a href="/polls/2/"\n      >how are you?</a\n    >\n  </li>\n  \n  <li>\n    <a href="/polls/1/"\n      >What&#x27;s up?</a\n 
+   >\n  </li>\n  \n</ul>\n\n'
+
+In [18]: response.context["latest_question_list"]
+Out[18]: <QuerySet [<Question: how are you?>, <Question: What's up?>]>
